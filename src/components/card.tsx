@@ -1,32 +1,14 @@
-type Card = {
-    numero: number;
-    nombre: string;
-    tipo: string;
-    ataque: number;
-    defensa: number;
-    descripcion: string;
-    imagen: string;
-    vida: number;
-};
-type Props = Card & {
+import type { Card } from "../types/card"; // Importa el tipo centralizado
+import { CloseIcon } from "./CardForm/CloseIcon"; // Reutiliza el icono que ya tienes
+
+interface Props extends Card {
     onCardClick: (card: Card | null) => void;
     onEditClick: (card: Card) => void;
     onDeleteClick: (numero: number) => void;
     isFlipped?: boolean; 
     isModalView?: boolean; 
-};
-const CloseIcon = () => (
-    <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        className="h-6 w-6" 
-        fill="none" 
-        viewBox="0 0 24 24" 
-        stroke="currentColor" 
-        strokeWidth={2}
-    >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-);
+}
+
 function CardDetail({
     ataque, defensa, descripcion, imagen, nombre, numero, tipo, vida,
     onCardClick, onEditClick, onDeleteClick, isFlipped = false, isModalView = false,
@@ -114,6 +96,6 @@ function CardDetail({
             </div>
         </div>
     );
-}
+}; // <--- ESTA ES LA LLAVE QUE FALTA PARA CERRAR LA FUNCIÓN
 
 export default CardDetail;
