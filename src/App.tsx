@@ -12,34 +12,34 @@ import CardDetail from "./components/card";
 
 const initialCards: Card[] = [
     {
-        ataque: 270,
-        nombre: "Shōyō Hinata",
-        defensa: 100,
-        descripcion: "Atacante central (middle blocker) de Karasuno, a pesar de su corta estatura. Es el protagonista de la serie y es conocido por su increíble agilidad, saltos sobrehumanos y su determinación inquebrantable.",
-        imagen: "https://i.redd.it/p9ovxh9mtcw51.jpg",
+        nu_atk: 270,
+        nb_name: "Shōyō Hinata",
+        nu_def: 100,
+        nb_description: "Atacante central (middle blocker) de Karasuno, a pesar de su corta estatura.",
+        nb_image: "https://i.redd.it/p9ovxh9mtcw51.jpg",
         numero: 1,
-        tipo: "Atacante y Salto",
-        vida: 100,
+        nb_type: "Atacante y Salto",
+        nu_hp: 100,
     },
     {
-        ataque: 60,
-        nombre: "Yū Nishinoya",
-        defensa: 450,
-        descripcion: "Libero del equipo de voleibol de Karasuno. Es famoso por sus increíbles reflejos, su velocidad y su habilidad para salvar cualquier balón (guardián de Karasuno).",
-        imagen: "https://i.pinimg.com/originals/57/50/f8/5750f89c92db4b576a4b73be419d17bf.jpg",
+        nu_atk: 60,
+        nb_name: "Yū Nishinoya",
+        nu_def: 450,
+        nb_description: "Libero del equipo de voleibol de Karasuno. Famoso por sus reflejos.",
+        nb_image: "https://i.pinimg.com/originals/57/50/f8/5750f89c92db4b576a4b73be419d17bf.jpg",
         numero: 2,
-        tipo: "Defensor y Rapidez",
-        vida: 100,
+        nb_type: "Defensor y Rapidez",
+        nu_hp: 100,
     },
     {
-        ataque: 280,
-        nombre: "Tobio Kageyama",
-        defensa: 380,
-        descripcion: "Armador/colocador genio de Karasuno. Inicialmente conocido como el Rey de la Cancha por su actitud autoritaria, destaca por su precisión técnica inigualable.",
-        imagen: "https://i.pinimg.com/736x/a2/d8/10/a2d810489524f93d25da8f6e45a50b5f.jpg",
+        nu_atk: 280,
+        nb_name: "Tobio Kageyama",
+        nu_def: 380,
+        nb_description: "Armador/colocador genio de Karasuno. El Rey de la Cancha.",
+        nb_image: "https://i.pinimg.com/736x/a2/d8/10/a2d810489524f93d25da8f6e45a50b5f.jpg",
         numero: 3,
-        tipo: "Armador Y Sacador",
-        vida: 100,
+        nb_type: "Armador Y Sacador",
+        nu_hp: 100,
     },
 ];
 
@@ -49,20 +49,41 @@ function App() {
     const [editingCard, setEditingCard] = useState<Card | null>(null);
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [error, setError] = useState("");
+    
     const [formData, setFormData] = useState<FormFields>({
         nombre: "", ataque: 0, defensa: 0, vida: 100,
         descripcion: "", imagen: "", tipo: "", numero: 0
     });
 
+    // MODIFICADO: Aseguramos que cargue TODOS los campos al editar y los limpie al crear
     const toggleFormModal = (open: boolean, cardToEdit: Card | null = null) => {
         setIsModalOpen(open);
         setError("");
         if (open && cardToEdit) {
             setEditingCard(cardToEdit);
-            setFormData(cardToEdit as FormFields);
+            setFormData({
+                nombre: cardToEdit.nb_name,
+                ataque: cardToEdit.nu_atk,    // <-- Antes quizás no estaba cargando nu_atk
+                defensa: cardToEdit.nu_def,  // <-- Cargamos defensa
+                vida: cardToEdit.nu_hp,      // <-- Cargamos vida
+                descripcion: cardToEdit.nb_description,
+                imagen: cardToEdit.nb_image,
+                tipo: cardToEdit.nb_type,
+                numero: cardToEdit.numero || 0
+            });
         } else {
             setEditingCard(null);
-            setFormData({ nombre: "", ataque: 0, defensa: 0, vida: 100, descripcion: "", imagen: "", tipo: "", numero: 0 });
+            // Limpiamos con valores por defecto para que no queden vacíos
+            setFormData({ 
+                nombre: "", 
+                ataque: 0, 
+                defensa: 0, 
+                vida: 100, 
+                descripcion: "", 
+                imagen: "", 
+                tipo: "", 
+                numero: 0 
+            });
         }
     };
 
@@ -71,7 +92,7 @@ function App() {
         setFormData(prev => ({
             ...prev,
             [name]: ["ataque", "defensa", "vida"].includes(name) ? Number(value) : value
-        } as FormFields));
+        }));
     };
 
     const handleSaveCard = (e: React.FormEvent) => {
@@ -81,54 +102,74 @@ function App() {
             return;
         }
 
+        const newCardData: Card = {
+            nb_name: formData.nombre,
+            nu_atk: formData.ataque,
+            nu_def: formData.defensa,
+            nu_hp: formData.vida,
+            nb_description: formData.descripcion,
+            nb_image: formData.imagen,
+            nb_type: formData.tipo,
+            numero: editingCard ? editingCard.numero : cards.length + 1
+        };
+
         if (editingCard) {
-            setCards(cards.map(c => c.numero === editingCard.numero ? { ...formData, numero: c.numero } as Card : c));
+            setCards(cards.map(c => c.numero === editingCard.numero ? newCardData : c));
         } else {
-            const newCard = { ...formData, numero: cards.length + 1 } as Card;
-            setCards([...cards, newCard]);
+            setCards([...cards, newCardData]);
         }
         toggleFormModal(false);
     };
 
-    // Objeto con acciones para las cartas
     const cardActions = {
-        onCardClick: setSelectedCard,
-        onEditClick: (card: Card) => toggleFormModal(true, card),
-        onDeleteClick: (num: number) => setCards(cards.filter(c => c.numero !== num))
+        onCardClick: (card: Card) => setSelectedCard(card),
+        onEditClick: (card: Card) => {
+            setSelectedCard(null);
+            toggleFormModal(true, card);
+        },
+        onDeleteClick: (num: number) => {
+            setCards(cards.filter(c => c.numero !== num));
+            setSelectedCard(null);
+        }
     };
 
     return (
         <div className="min-h-screen bg-[#A1887F] flex flex-col items-center p-8">
             <Header />
 
-            <div className="flex flex-wrap justify-center max-w-5xl w-full">
+            <div className="flex flex-wrap justify-center max-w-6xl w-full gap-6 mt-6">
                 {cards.map((card) => (
                     <CardDetail 
                         key={card.numero} 
-                        {...card} 
-                        {...cardActions}
-                        isFlipped={false}
-                        isModalView={false}
+                        numero={card.numero || 0}
+                        nombre={card.nb_name}
+                        tipo={card.nb_type}
+                        imagen={card.nb_image}
+                        onCardClick={() => cardActions.onCardClick(card)}
                     />
                 ))}
             </div>
 
             <button 
-                className="mt-10 bg-white p-4 rounded-full border-2 border-[#FF7E00] font-bold"
+                className="mt-10 bg-white p-4 rounded-full border-2 border-[#FF7E00] font-bold shadow-md hover:scale-105 transition-transform"
                 onClick={() => toggleFormModal(true)}
             >
                 Agregar Nueva Carta
             </button>
 
             {isModalOpen && (
-                <CardForm 
-                    editingCard={editingCard}
-                    formData={formData}
-                    error={error}
-                    onClose={() => toggleFormModal(false)}
-                    onSave={handleSaveCard}
-                    onChange={handleInputChange}
-                />
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-xl relative">
+                        <CardForm 
+                            editingCard={editingCard}
+                            formData={formData}
+                            error={error}
+                            onClose={() => toggleFormModal(false)}
+                            onSave={handleSaveCard}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                </div>
             )}
 
             {selectedCard && (
