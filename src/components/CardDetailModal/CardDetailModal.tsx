@@ -22,37 +22,36 @@ export const CardDetailModal = ({ selectedCard, onClose, onEditClick, onDeleteCl
 
                 {/* Imagen del Personaje */}
                 <img 
-                    src={selectedCard.nb_image} 
-                    alt={selectedCard.nb_name} 
+                    src={selectedCard.pictureUrl} 
+                    alt={selectedCard.name} 
                     className="w-full h-64 object-cover" 
                 />
 
                 <div className="p-6 flex flex-col items-center">
                     <h2 className="text-3xl font-black text-gray-800 uppercase italic leading-none">
-                        {selectedCard.nb_name}
+                        {selectedCard.name}
                     </h2>
                     <p className="text-[#FF7E00] font-bold text-sm tracking-[0.2em] mb-6 uppercase">
-                        {selectedCard.nb_type}
                     </p>
 
                     {/* Stats Grilla */}
                     <div className="grid grid-cols-3 gap-4 w-full mb-6">
                         <div className="bg-orange-50 p-2 rounded-xl text-center border border-orange-100">
                             <span className="block text-[10px] font-black text-orange-400">ATK</span>
-                            <span className="text-xl font-black text-orange-600">{selectedCard.nu_atk}</span>
+                            <span className="text-xl font-black text-orange-600">{selectedCard.attack}</span>
                         </div>
                         <div className="bg-blue-50 p-2 rounded-xl text-center border border-blue-100">
                             <span className="block text-[10px] font-black text-blue-400">DEF</span>
-                            <span className="text-xl font-black text-blue-600">{selectedCard.nu_def}</span>
+                            <span className="text-xl font-black text-blue-600">{selectedCard.defense}</span>
                         </div>
                         <div className="bg-red-50 p-2 rounded-xl text-center border border-red-100">
                             <span className="block text-[10px] font-black text-red-400">HP</span>
-                            <span className="text-xl font-black text-red-600">{selectedCard.nu_hp}</span>
+                            <span className="text-xl font-black text-red-600">{selectedCard.lifePoints}</span>
                         </div>
                     </div>
 
                     <p className="text-gray-600 text-center italic mb-8 px-4 leading-tight">
-                        "{selectedCard.nb_description}"
+                        "{selectedCard.description}"
                     </p>
 
                     {/* Botones de Acción */}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import "./App.css";
 
@@ -11,16 +11,16 @@ import { CardForm } from "./components/CardForm/CardForm";
 import { CardDetailModal } from "./components/CardDetailModal/CardDetailModal";
 import CardDetail from "./components/card";
 
-const initialCards: Card[] = [
+const initialCards: any[] = [
     {
-        nu_atk: 270,
-        nb_name: "Shōyō Hinata",
+        attack: 270,
+        name: "Shōyō Hinata",
         nu_def: 100,
-        nb_description: "Atacante central de Karasuno. Conocido por su agilidad y saltos sobrehumanos.",
-        nb_image: "https://i.redd.it/p9ovxh9mtcw51.jpg",
+        defense: "Atacante central de Karasuno. Conocido por su agilidad y saltos sobrehumanos.",
+        pictureUrl: "https://i.redd.it/p9ovxh9mtcw51.jpg",
         numero: 1,
-        nb_type: "Atacante y Salto",
-        nu_hp: 100,
+        attributes: "Atacante y Salto",
+        lifePoints: 100,
     },
     {
         nu_atk: 60,
@@ -51,7 +51,7 @@ function App() {
     const [editingCard, setEditingCard] = useState<Card | null>(null);
     const [formData, setFormData] = useState<FormFields>({
         nombre: "", ataque: 0, defensa: 0, vida: 100,
-        descripcion: "", imagen: "", tipo: "", numero: 0
+        descripcion: "", imagen: "", numero: 0
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -66,9 +66,9 @@ function App() {
         if (card) {
             setEditingCard(card);
             setFormData({
-                nombre: card.nb_name, ataque: card.nu_atk, defensa: card.nu_def,
-                vida: card.nu_hp, descripcion: card.nb_description,
-                imagen: card.nb_image, tipo: card.nb_type, numero: card.numero || 0
+                nombre: card.name, ataque: card.attack, defensa: card.defense,
+                vida: card.lifePoints, descripcion: card.description,
+                imagen: card.pictureUrl, numero: card.numero || 0
             });
             navigate(`/editar/${card.numero}`);
         } else {
@@ -78,29 +78,89 @@ function App() {
         }
     };
 
-    const handleSaveCard = (e: React.FormEvent) => {
+    const handleSaveCard = async (e: React.FormEvent) => {
         e.preventDefault();
         // Forzamos un número válido para que TS no llore
         const idFinal = editingCard?.numero ?? Date.now();
         
         const cardToSave: Card = {
-            nb_name: formData.nombre,
-            nu_atk: formData.ataque,
-            nu_def: formData.defensa,
-            nu_hp: formData.vida,
-            nb_description: formData.descripcion,
-            nb_image: formData.imagen,
-            nb_type: formData.tipo,
-            numero: idFinal
+            name: formData.nombre,
+            attack: formData.ataque,
+            defense: formData.defensa,
+            lifePoints: formData.vida,
+            description: formData.descripcion,
+            pictureUrl: formData.imagen,
+            //attributes: formData.tipo,
         };
 
-        if (editingCard) {
-            setCards(cards.map(c => c.numero === editingCard.numero ? cardToSave : c));
-        } else {
-            setCards([...cards, cardToSave]);
-        }
+        try {
+                setCards([...cards!, cardToSave]);
+                let respuesta = await fetch("https://educapi-v2.onrender.com/card", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        usersecretpasskey:"Dieg804808RO"
+                    },
+                    body: JSON.stringify({
+                        name: formData.nombre,
+                        attack: formData.ataque,
+                        defense: formData.defensa,
+                        lifePoints: formData.vida,
+                        description: formData.descripcion,
+                        pictureUrl: formData.imagen,
+                        attributes:{tipo:formData.tipo} ,
+                    
+                    }),
+                });
+                console.log(await respuesta.json())
+            } catch(e) {
+                console.error("Error creando carta", e)
+            }
+
+        
         navigate("/");
     };
+
+    const getCards = async () => {
+        try {
+                let respuesta = await fetch("https://educapi-v2.onrender.com/card", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        usersecretpasskey:"Dieg804808RO"
+                    },
+                });
+
+                let cartasOptenidas = await respuesta.json()
+                setCards(cartasOptenidas.data)
+
+            } catch(e) {
+                console.error("Error creando carta", e)
+            }
+    }
+
+    const deleteCards = async () => {
+        try { console.log(selectedCard);
+                let respuesta = await fetch("https://educapi-v2.onrender.com/card/"+selectedCard?.idCard, {
+                    method: "DELETE",
+                    headers: {
+                        usersecretpasskey:"Dieg804808RO"
+                    },
+                });
+
+                let cartasOptenidas = await respuesta.json()
+
+            } catch(e) {
+                console.error("Error creando carta", e)
+            }
+            getCards();
+    }
+
+    useEffect(()=> {
+        getCards();
+    },[]);
+
+    useEffect(() => {console.log('Probando')}, []);
 
     return (
         <div className="min-h-screen bg-[#A1887F] flex flex-col items-center p-8">
@@ -114,9 +174,9 @@ function App() {
                                 <CardDetail 
                                     key={card.numero} 
                                     numero={card.numero ?? 0} // <--- ESTO ARREGLA EL ERROR DE LA LÍNEA 70
-                                    nombre={card.nb_name}
-                                    tipo={card.nb_type}
-                                    imagen={card.nb_image}
+                                    nombre={card.name}
+                                    tipo='Humano'
+                                    imagen={card.pictureUrl}
                                     onCardClick={() => {
                                         setSelectedCard(card);
                                         navigate(`/detalle/${card.numero}`);
@@ -159,6 +219,7 @@ function App() {
                     onClose={() => { setSelectedCard(null); navigate("/"); }}
                     onEditClick={(card) => { setSelectedCard(null); openForm(card); }}
                     onDeleteClick={(num) => {
+                        deleteCards();
                         setCards(cards.filter(c => c.numero !== num));
                         setSelectedCard(null);
                         navigate("/");
