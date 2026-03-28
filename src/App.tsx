@@ -16,6 +16,7 @@ const initialCards: Card[] = [
         nu_atk: 270,
         nb_name: "Shōyō Hinata",
         nu_def: 100,
+        nb_description: "Atacante central de Karasuno. Conocido por su agilidad y saltos sobrehumanos.",
         nb_image: "https://i.redd.it/p9ovxh9mtcw51.jpg",
         numero: 1,
         nb_type: "Atacante y Salto",
