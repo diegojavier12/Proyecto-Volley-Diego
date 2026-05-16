@@ -19,7 +19,7 @@ const ModalCartaDetalle: React.FC<{ carta: CartaProps, isOpen: boolean, onClose:
           </div>
         </div>
         <div className="w-full md:w-1/2 bg-black flex justify-center items-center p-6">
-          <img src={carta.pinctureUrl} alt={carta.name} className="max-h-full max-w-full object-contain rounded-lg border-2 border-gray-800" />
+          <img src={carta.pictureUrl} alt={carta.name} className="max-h-full max-w-full object-contain rounded-lg border-2 border-gray-800" />
         </div>
       </div>
     </div>

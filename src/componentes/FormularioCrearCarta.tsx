@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { CartaProps } from '../tipos/tiposCarta';
 
 const FormularioCrearCarta: React.FC<{ onNuevaCarta: (c: CartaProps) => void }> = ({ onNuevaCarta }) => {
-  const [form, setForm] = useState({ name: '', description: '', attack: 0, defense: 0, lifepoint: 100, posicion: 'Atacante', pinctureUrl: '' });
+  const [form, setForm] = useState({ name: '', description: '', attack: 0, defense: 0, lifepoint: 100, posicion: 'Atacante', pictureUrl: '' });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,7 +14,7 @@ const FormularioCrearCarta: React.FC<{ onNuevaCarta: (c: CartaProps) => void }> 
       headers: { "usersecretpasskey": "Dieg804808RO", "Content-type": "application/json" },
       body: JSON.stringify({
         name: form.name, description: form.description, attack: form.attack,
-        defense: form.defense, lifePoints: form.lifepoint, pictureUrl: form.pinctureUrl,
+        defense: form.defense, lifePoints: form.lifepoint, pictureUrl: form.pictureUrl,
         attributes: { posicion: form.posicion }
       })
     });
@@ -34,7 +34,7 @@ const FormularioCrearCarta: React.FC<{ onNuevaCarta: (c: CartaProps) => void }> 
         <textarea placeholder="Habilidades..." onChange={e => setForm({...form, description: e.target.value})} className="md:col-span-2 p-2.5 bg-gray-800 text-white rounded-lg border border-gray-700" />
         <input type="number" placeholder="ATK" onChange={e => setForm({...form, attack: parseInt(e.target.value)})} className="p-2.5 bg-gray-800 text-white rounded-lg border border-gray-700" />
         <input type="number" placeholder="DEF" onChange={e => setForm({...form, defense: parseInt(e.target.value)})} className="p-2.5 bg-gray-800 text-white rounded-lg border border-gray-700" />
-        <input placeholder="URL Imagen" onChange={e => setForm({...form, pinctureUrl: e.target.value})} className="md:col-span-2 p-2.5 bg-gray-800 text-white rounded-lg border border-gray-700" />
+        <input placeholder="URL Imagen" onChange={e => setForm({...form, pictureUrl: e.target.value})} className="md:col-span-2 p-2.5 bg-gray-800 text-white rounded-lg border border-gray-700" />
         <button type="submit" className="md:col-span-2 py-4 bg-[#FF7E00] text-white font-black rounded-xl uppercase hover:bg-[#e67200] transition-all shadow-lg">Entrar a la Cancha</button>
       </form>
     </div>

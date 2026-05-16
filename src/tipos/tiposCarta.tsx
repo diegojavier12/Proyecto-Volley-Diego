@@ -6,7 +6,7 @@ export interface CartaProps {
     attack: number;
     defense: number;
     lifepoint: number;
-    pinctureUrl: string;
+    pictureUrl: string;
     posicion: 'Atacante' | 'Armador' | 'Libero' | 'Bloqueador' | 'Universal';
     numero?: number;
 }

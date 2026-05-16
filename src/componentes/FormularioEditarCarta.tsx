@@ -42,7 +42,7 @@ const respuesta = await fetch(urlAPI, {
     attack: formData.attack,
     defense: formData.defense,
     lifePoints: formData.lifepoint,
-    pictureUrl: formData.pinctureUrl,
+    pictureUrl: formData.pictureUrl,
     attributes: { raza: formData.posicion }
   })
 });
@@ -91,7 +91,7 @@ console.log(respuesta);
 
         <div className="md:col-span-2">
           <label className={labelClass}>URL de la Imagen</label>
-          <input name="pinctureUrl" value={formData.pinctureUrl} onChange={handleChange} className={inputClass} />
+          <input name="pictureUrl" value={formData.pictureUrl} onChange={handleChange} className={inputClass} />
         </div>
 
         <div className="md:col-span-2 flex gap-4">

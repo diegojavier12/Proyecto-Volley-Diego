@@ -9,7 +9,7 @@ const Carta: React.FC<CartaProps & { onCardClick: any, onDelete: any, onEdit: an
         <button onClick={(e) => { e.stopPropagation(); props.onDelete(props.id); }} className="p-2 bg-red-600 rounded-full text-white"><svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.86 12.14A2 2 0 0116.14 21H7.86a2 2 0 01-1.99-1.86L5 7m5 4v6m4-6v6M1 7h22" /></svg></button>
       </div>
       <div className="h-48 overflow-hidden bg-black">
-        <img className="w-full h-full object-cover" src={props.pinctureUrl} alt={props.name} />
+        <img className="w-full h-full object-cover" src={props.pictureUrl} alt={props.name} />
       </div>
       <div className="px-4 py-3">
         <h2 className="font-black text-xl uppercase text-[#FF7E00] truncate">{props.name}</h2>

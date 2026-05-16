@@ -12,17 +12,17 @@ const personajesIniciales: CartaProps[] = [
   {
     id: 1, idCard: 1, attack: 270, name: "Shōyō Hinata", defense: 100, lifepoint: 100,
     description: "Atacante central de Karasuno. Conocido por su agilidad y saltos sobrehumanos.",
-    pinctureUrl: "https://i.redd.it/p9ovxh9mtcw51.jpg", posicion: "Atacante", numero: 10
+    pictureUrl: "https://i.redd.it/p9ovxh9mtcw51.jpg", posicion: "Atacante", numero: 10
   },
   {
     id: 2, idCard: 2, attack: 60, name: "Yū Nishinoya", defense: 450, lifepoint: 100,
     description: "Libero de Karasuno. El guardián del equipo con reflejos increíbles.",
-    pinctureUrl: "https://i.pinimg.com/originals/57/50/f8/5750f89c92db4b576a4b73be419d17bf.jpg", posicion: "Libero", numero: 4
+    pictureUrl: "https://i.pinimg.com/originals/57/50/f8/5750f89c92db4b576a4b73be419d17bf.jpg", posicion: "Libero", numero: 4
   },
   {
     id: 3, idCard: 3, attack: 280, name: "Tobio Kageyama", defense: 380, lifepoint: 100,
     description: "Armador genio de Karasuno. Destaca por su precisión técnica inigualable.",
-    pinctureUrl: "https://i.pinimg.com/736x/a2/d8/10/a2d810489524f93d25da8f6e45a50b5f.jpg", posicion: "Armador", numero: 9
+    pictureUrl: "https://i.pinimg.com/736x/a2/d8/10/a2d810489524f93d25da8f6e45a50b5f.jpg", posicion: "Armador", numero: 9
   }
 ];
 
