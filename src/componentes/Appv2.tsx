@@ -27,7 +27,7 @@ const personajesIniciales: CartaProps[] = [
 ];
 
 interface AppProps {
-  vista: 'inicio' | 'crear' | 'detalle' | 'editar';
+  vista: 'inicio' | 'crear' | 'detalle' | 'editar' | 'desafio'; // <--- Añadimos 'desafio'
   cartas: CartaProps[];
   setCartas: Function
 }
@@ -39,6 +39,24 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [idParaBorrar, setIdParaBorrar] = useState<number | null>(null);
+
+  // NUEVO ESTADO: Maneja las cartas seleccionadas de forma global
+  const [seleccionadas, setSeleccionadas] = useState<CartaProps[]>([]);
+
+  // Función para agregar o quitar cartas de la alineación
+  const handleToggleSeleccion = (carta: CartaProps) => {
+    const existe = seleccionadas.some((c) => c.id === carta.id);
+    if (existe) {
+      setSeleccionadas(seleccionadas.filter((c) => c.id !== carta.id));
+    } else {
+      // Opcional: límite reglamentario de 6 jugadores en cancha
+      if (seleccionadas.length >= 6) {
+        alert("¡La rotación está al máximo! Solo puedes tener 6 jugadores en la alineación titular.");
+        return;
+      }
+      setSeleccionadas([...seleccionadas, carta]);
+    }
+  };
 
   useEffect(() => {
     const guardadas = localStorage.getItem('cartas_haikyuu');
@@ -71,6 +89,8 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
           <div className="flex gap-6">
             <Link to="/" className={`font-bold uppercase ${vista === 'inicio' ? 'text-[#FF7E00]' : 'text-gray-400'}`}>Cancha</Link>
             <Link to="/forja" className={`font-bold uppercase ${vista === 'crear' ? 'text-[#FF7E00]' : 'text-gray-400'}`}>Entrenamiento</Link>
+            {/* NUEVO BOTÓN MENÚ: DESAFÍO */}
+            <Link to="/desafio" className={`font-bold uppercase ${vista === 'desafio' ? 'text-[#FF7E00]' : 'text-gray-400'}`}>Desafío</Link>
           </div>
         </div>
       </nav>
@@ -84,7 +104,33 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
           }} />
         )}
         {(vista === 'inicio' || vista === 'detalle') && (
-          <MazoDeCartas cartas={cartas} onCardClick={(c) => navigate(`/carta/${c.id}`)} onDelete={(id) => { setIdParaBorrar(id); setMostrarConfirmacion(true); }} onEdit={(c) => navigate(`/editar/${c.id}`)} />
+          <MazoDeCartas 
+            cartas={cartas} 
+            onCardClick={(c) => navigate(`/carta/${c.id}`)} 
+            onDelete={(id) => { setIdParaBorrar(id); setMostrarConfirmacion(true); }} 
+            onEdit={(c) => navigate(`/editar/${c.id}`)} 
+            seleccionadas={seleccionadas}           // <--- Sincronización pasadas como Props
+            onToggleSeleccion={handleToggleSeleccion} // <--- Sincronización pasadas como Props
+          />
+        )}
+
+        {/* VISTA DEL COMPONENTE DESAFÍO (Preparamos el espacio para tu campo de batalla) */}
+        {vista === 'desafio' && (
+          <div className="p-8 bg-gray-900 border-2 border-red-500 rounded-2xl shadow-2xl text-center">
+            <h2 className="text-4xl font-black text-red-500 uppercase italic mb-4">Modo Desafío: Campo de Batalla</h2>
+            <p className="text-gray-300 mb-6">Jugadores listos en tu rotación titular: <span className="font-bold text-[#FF7E00]">{seleccionadas.length} / 6</span></p>
+            
+            {/* Aquí es donde construiremos lo que tú me indiques para el combate */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+              {seleccionadas.map(jugador => (
+                <div key={jugador.id} className="p-4 bg-black/40 rounded border border-gray-700 flex flex-col items-center">
+                  <img src={jugador.pictureUrl} alt={jugador.name} className="h-20 w-20 object-cover rounded-full border border-[#FF7E00] mb-2"/>
+                  <span className="font-bold text-sm text-[#FF7E00]">{jugador.name}</span>
+                  <span className="text-xs text-gray-400">ATK: {jugador.attack} | DEF: {jugador.defense}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </main>
 

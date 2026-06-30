@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import type { CartaProps } from '../tipos/tiposCarta';
 
@@ -8,10 +7,10 @@ interface EditarProps {
   onCancelar: () => void;
 }
 
-const FormularioEditarCarta: React.FC<EditarProps> = ({ cartaActual, onCancelar }) => {
+// CORREGIDO: Ahora sí extraemos 'onGuardar' de las props
+const FormularioEditarCarta: React.FC<EditarProps> = ({ cartaActual, onCancelar, onGuardar }) => {
   const [formData, setFormData] = useState<CartaProps>(cartaActual);
 
- 
   useEffect(() => {
     setFormData(cartaActual);
   }, [cartaActual]);
@@ -24,30 +23,35 @@ const FormularioEditarCarta: React.FC<EditarProps> = ({ cartaActual, onCancelar 
     }));
   };
 
- const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-   
-   const urlAPI = `https://educapi-v2.onrender.com/card/${formData.idCard}`; 
+    // Usamos idCard o id en su defecto de forma segura
+    const idIdentificador = formData.idCard || formData.id;
+    const urlAPI = `https://educapi-v2.onrender.com/card/${idIdentificador}`; 
 
-const respuesta = await fetch(urlAPI, {
-  method: 'PATCH',
-  headers: {
-    "usersecretpasskey": "Dieg804808RO",
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    name: formData.name,
-    description: formData.description,
-    attack: formData.attack,
-    defense: formData.defense,
-    lifePoints: formData.lifepoint,
-    pictureUrl: formData.pictureUrl,
-    attributes: { raza: formData.posicion }
-  })
-});
-
-console.log(respuesta);
+    try {
+      const respuesta = await fetch(urlAPI, {
+        method: 'PATCH',
+        headers: {
+          "usersecretpasskey": "Dieg804808RO",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          description: formData.description,
+          attack: formData.attack,
+          defense: formData.defense,
+          lifePoints: formData.lifepoint,
+          pictureUrl: formData.pictureUrl,
+          attributes: { raza: formData.posicion }
+        })
+      });
+      console.log(respuesta);
+    } catch (err) {
+      console.error("Error al hacer el PATCH en el servidor, guardando localmente...", err);
+    }
+    onGuardar(formData);
   };
 
   const labelClass = "text-xs font-bold text-gray-500 uppercase mb-1 block";
