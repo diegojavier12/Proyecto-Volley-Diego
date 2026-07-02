@@ -7,6 +7,7 @@ import FormularioEditarCarta from './FormularioEditarCarta';
 import MazoDeCartas from './MazoDeCartas';
 import ModalCartaDetalle from './ModalCartaDetalle';
 import ConfirmacionBorrado from './ConfirmacionBorrado';
+import DiseñoCartaIA from './DiseñoCartaIA';
 
 // IMPORTACIÓN DEL NUEVO COMPONENTE INTEGRADO
 import { PantallaBatalla } from './PantallaBatalla';
@@ -30,7 +31,7 @@ const personajesIniciales: CartaProps[] = [
 ];
 
 interface AppProps {
-  vista: 'inicio' | 'crear' | 'detalle' | 'editar' | 'desafio'; 
+  vista: 'inicio' | 'crear' | 'detalle' | 'editar' | 'desafio' | 'disenar-ia'; 
   cartas: CartaProps[];
   setCartas: Function
 }
@@ -95,15 +96,17 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
           <Link to="/" onClick={() => setPartidoIniciado(false)} className="text-2xl font-black text-[#FF7E00] italic uppercase tracking-tighter drop-shadow-md">
             El Vuelo de Haikyuu: <span className="text-white">Cartas de la Cancha</span>
           </Link>
-          <div className="flex gap-6">
-            <Link to="/" onClick={() => setPartidoIniciado(false)} className={`font-bold uppercase ${vista === 'inicio' ? 'text-[#FF7E00]' : 'text-gray-400'}`}>Cancha</Link>
-            <Link to="/forja" onClick={() => setPartidoIniciado(false)} className={`font-bold uppercase ${vista === 'crear' ? 'text-[#FF7E00]' : 'text-gray-400'}`}>Entrenamiento</Link>
-            <Link to="/desafio" className={`font-bold uppercase ${vista === 'desafio' ? 'text-[#FF7E00]' : 'text-gray-400'}`}>Desafío</Link>
+          <div className="flex gap-6 font-bold uppercase text-xs sm:text-sm tracking-wider">
+            <Link to="/" onClick={() => setPartidoIniciado(false)} className={vista === 'inicio' ? 'text-[#FF7E00]' : 'text-gray-400 hover:text-white transition-colors'}>Cancha</Link>
+            <Link to="/forja" onClick={() => setPartidoIniciado(false)} className={vista === 'crear' ? 'text-[#FF7E00]' : 'text-gray-400 hover:text-white transition-colors'}>Entrenamiento</Link>
+            <Link to="/disenar-ia" onClick={() => setPartidoIniciado(false)} className={vista === 'disenar-ia' ? 'text-[#FF7E00]' : 'text-gray-400 hover:text-white transition-colors'}>Diseño IA</Link>
+            <Link to="/desafio" className={vista === 'desafio' ? 'text-[#FF7E00]' : 'text-gray-400 hover:text-white transition-colors'}>Desafío</Link>
           </div>
         </div>
       </nav>
 
       <main className="p-6 max-w-7xl mx-auto">
+        {/* INTERFACES DE CREACIÓN Y EDICIÓN TRADICIONAL */}
         {vista === 'crear' && <FormularioCrearCarta onNuevaCarta={(n) => { setCartas([n, ...cartas]); navigate('/'); }} />}
         {vista === 'editar' && selectedCard && (
           <FormularioEditarCarta cartaActual={selectedCard} onCancelar={() => navigate('/')} onGuardar={(e) => {
@@ -111,6 +114,15 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
             navigate('/');
           }} />
         )}
+        
+        {/* INTEGRACIÓN DEL NUEVO CREADOR CON INTELIGENCIA ARTIFICIAL */}
+        {vista === 'disenar-ia' && (
+          <DiseñoCartaIA onCartaCreada={(nuevaCarta) => {
+            setCartas([nuevaCarta, ...cartas]);
+          }} />
+        )}
+
+        {/* RENDERIZADO DEL MAZO PRINCIPAL */}
         {(vista === 'inicio' || vista === 'detalle') && (
           <MazoDeCartas 
             cartas={cartas} 

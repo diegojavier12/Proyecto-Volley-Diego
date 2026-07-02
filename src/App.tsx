@@ -30,9 +30,10 @@ function App() {
       <Route path="/forja" element={<Appv2 vista="crear" cartas={cartas} setCartas={setCartas}/>} />
       <Route path="/carta/:id" element={<Appv2 vista="detalle" cartas={cartas} setCartas={setCartas}/>} />
       <Route path="/editar/:id" element={<Appv2 vista="editar" cartas={cartas} setCartas={setCartas}/>} />
-      
-      {/* NUEVA RUTA INTEGRADA */}
       <Route path="/desafio" element={<Appv2 vista="desafio" cartas={cartas} setCartas={setCartas}/>} />
+      
+      {/* NUEVA RUTA INTEGRADA PARA EL CREADOR CON IA */}
+      <Route path="/disenar-ia" element={<Appv2 vista="disenar-ia" cartas={cartas} setCartas={setCartas}/>} />
     </Routes>
   );
 }
