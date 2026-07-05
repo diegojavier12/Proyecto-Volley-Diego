@@ -177,7 +177,6 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
     setHistorialLogs(prev => [{ id: Date.now(), mensaje: logMsg, tipo: 'ataque' }, ...prev]);
     setEsTurnoJugador(false);
 
-    // Se eliminaron los argumentos no leídos cumpliendo las reglas estrictas de TypeScript
     setTimeout(() => ejecucionTurnoIA(), 1800);
   };
 
@@ -363,7 +362,6 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
           <div className="text-center font-bold text-xs uppercase text-neutral-400 tracking-wider">Acciones de Partido</div>
           <button 
             onClick={darAguaEquipo}
-            // MODIFICACIÓN CORREGIDA: Se aplica doble negación para asegurar tipo estrictamente booleano en el atributo HTML disabled
             disabled={!!aguaUsadaJugador || !!ganador}
             className={`w-full py-3 font-black uppercase text-xs rounded-xl border tracking-wider transition-all ${aguaUsadaJugador ? 'bg-neutral-800 border-neutral-700 text-neutral-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white border-blue-500 shadow-md'}`}
           >
@@ -383,8 +381,6 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
 
         <div className="md:col-span-2 bg-neutral-900 border-2 border-neutral-800 p-4 rounded-2xl flex flex-col shadow-lg">
           <h3 className="text-xs uppercase font-black text-orange-400 tracking-wider mb-2 pb-1 border-b border-neutral-800">Historial del Campo de Batalla</h3>
-          
-          {/* MODIFICACIÓN CORREGIDA: Se reemplaza max-h-[120px] por clase canónica h-30 de Tailwind */}
           <div className="flex-1 max-h-30 overflow-y-auto space-y-2 pr-1 font-mono text-xs">
             {historialLogs.map((log) => {
               let borderCol = "border-neutral-700 bg-neutral-800/50 text-neutral-300";
@@ -397,7 +393,57 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
         </div>
       </div>
 
-      {/* MODAL DE TIME OUT */}
+      {/* ANUNCIO LUMINOSO Y BRILLANTE DE FIN DEL JUEGO / VICTORIA */}
+      {ganador && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-[#111622] border-4 border-orange-500 rounded-3xl p-8 max-w-md w-full text-center relative shadow-[0_0_60px_rgba(249,115,22,0.45)] transform scale-100 transition-all border-double">
+            
+            {/* Destello de fondo brillante */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-orange-600/20 rounded-full blur-3xl pointer-events-none -z-10 animate-pulse"></div>
+
+            {/* Balón luminoso animado */}
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-gradient-to-t from-orange-600 to-amber-400 rounded-full shadow-[0_0_30px_rgba(245,158,11,0.6)] animate-bounce">
+                <span className="text-4xl">🏐</span>
+              </div>
+            </div>
+
+            {/* Letrero estilo Arcade / Campeonato */}
+            <div className="mb-4">
+              <h2 className="text-5xl font-black italic tracking-tighter uppercase text-white bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 border-y-4 border-black inline-block px-8 py-3 rounded-2xl transform -rotate-1 shadow-[0_5px_0_#000] border-inline">
+                {ganador.includes("Victoria") ? "VICTORY" : "MATCH OVER"}
+              </h2>
+            </div>
+
+            <p className="text-gray-200 font-black text-sm uppercase tracking-wider my-6 px-2 drop-shadow-sm">
+              {ganador}
+            </p>
+
+            <div className="text-xs text-orange-400 font-bold uppercase tracking-widest mb-6 animate-pulse">
+              ✨ ¡El balón nunca cayó de tu lado! ✨
+            </div>
+
+            {/* Botones de acción */}
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => window.location.reload()}
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white font-black py-4 rounded-xl uppercase tracking-widest text-xs border-b-4 border-green-800 active:border-b-0 transition-all shadow-lg shadow-emerald-950/50"
+              >
+                🔥 Volver a Jugar
+              </button>
+              
+              <button
+                onClick={() => navigate('/')}
+                className="w-full bg-neutral-900 hover:bg-neutral-800 text-gray-400 hover:text-white font-black py-3 rounded-xl uppercase tracking-wider text-xs border border-neutral-700 transition-all"
+              >
+                Regresar al Mazo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {}
       {mostrarTimeOut && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-neutral-900 border-2 border-orange-500 p-6 rounded-3xl max-w-sm w-full text-center shadow-2xl">
