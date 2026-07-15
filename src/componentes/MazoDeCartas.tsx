@@ -11,10 +11,10 @@ interface MazoProps {
 
 function MazoDeCartas({ cartas, onCardClick, onDelete, onEdit, seleccionadas, onToggleSeleccion }: MazoProps) {
   return (
-    // Contenedor que le da margen a los lados de la pantalla
+    
     <div className="w-full max-w-7xl mx-auto p-6">
       
-      {/* SEPARACIÓN AGREGADA: El "gap-8" mete el espacio limpio que faltaba entre las cartas */}
+      { }
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
         {cartas.map((carta) => {
           const estaSeleccionada = seleccionadas.some((c) => c.id === carta.id);
@@ -22,11 +22,11 @@ function MazoDeCartas({ cartas, onCardClick, onDelete, onEdit, seleccionadas, on
           return (
             <div 
               key={carta.id} 
-              className={`w-72 bg-[#161d26] border-2 rounded-2xl p-4 flex flex-col justify-between transition-all h-[470px] ${
+              className={`w-72 bg-[#161d26] border-2 rounded-2xl p-4 flex flex-col justify-between transition-all h-117.5 ${
                 estaSeleccionada ? 'border-orange-500 scale-[1.02] shadow-lg shadow-orange-500/10' : 'border-[#1f2937]'
               }`}
             >
-              {/* HEADER DE LA CARTA (NÚMERO Y +CONVOCAR) */}
+              { }
               <div className="flex justify-between items-center mb-2">
                 <span className="text-white text-xs font-bold bg-[#242f3d] px-2 py-1 rounded-md border border-neutral-700">
                   N° {carta.numero || 0}
@@ -47,7 +47,7 @@ function MazoDeCartas({ cartas, onCardClick, onDelete, onEdit, seleccionadas, on
                 </button>
               </div>
 
-              {/* IMAGEN Y CUERPO (CLICK PARA DETALLE) */}
+              { }
               <div onClick={() => onCardClick(carta)} className="cursor-pointer flex-1 flex flex-col justify-between">
                 <div>
                   <img 
@@ -58,12 +58,12 @@ function MazoDeCartas({ cartas, onCardClick, onDelete, onEdit, seleccionadas, on
                   
                   <h3 className="text-white font-black text-lg leading-tight uppercase tracking-wide truncate">{carta.name}</h3>
                   <span className="text-orange-500 text-xs font-bold uppercase tracking-wider">{carta.posicion}</span>
-                  <p className="text-gray-400 text-xs my-2 line-clamp-2 min-h-[32px] leading-snug">
+                  <p className="text-gray-400 text-xs my-2 line-clamp-2 min-h-8 leading-snug">
                     {carta.description}
                   </p>
                 </div>
 
-                {/* CONTENEDOR DE ATRIBUTOS ORIGINAL */}
+                { }
                 <div className="flex justify-around bg-black/30 p-2 rounded-xl my-2 text-center text-xs font-mono border border-neutral-900">
                   <div>
                     <span className="text-gray-500 text-[10px] block font-bold uppercase">Ataque</span>
@@ -77,7 +77,7 @@ function MazoDeCartas({ cartas, onCardClick, onDelete, onEdit, seleccionadas, on
                 </div>
               </div>
 
-              {/* ACCIONES INFERIORES ORIGINALES (EDITAR Y BORRAR) */}
+              { }
               <div className="flex justify-between gap-3 mt-2 pt-2 border-t border-[#1f2937]">
                 <button 
                   onClick={() => onEdit(carta)} 

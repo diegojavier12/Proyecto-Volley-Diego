@@ -7,7 +7,7 @@ interface EditarProps {
   onCancelar: () => void;
 }
 
-// CORREGIDO: Ahora sí extraemos 'onGuardar' de las props
+
 const FormularioEditarCarta: React.FC<EditarProps> = ({ cartaActual, onCancelar, onGuardar }) => {
   const [formData, setFormData] = useState<CartaProps>(cartaActual);
 
@@ -26,7 +26,7 @@ const FormularioEditarCarta: React.FC<EditarProps> = ({ cartaActual, onCancelar,
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Usamos idCard o id en su defecto de forma segura
+   
     const idIdentificador = formData.idCard || formData.id;
     const urlAPI = `https://educapi-v2.onrender.com/card/${idIdentificador}`; 
 

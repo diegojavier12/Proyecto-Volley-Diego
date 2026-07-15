@@ -13,11 +13,11 @@ const Carta: React.FC<ComponenteCartaProps> = (props) => {
   return (
     <div onClick={() => props.onCardClick(props)} className="max-w-72 w-full rounded-xl overflow-hidden shadow-2xl m-3 bg-gray-900 border-2 border-[#FF7E00] transform transition hover:scale-105 cursor-pointer relative p-1">
       
-      {/* INDICADOR CIRCULAR SUPERIOR IZQUIERDA (Solo visible si está seleccionada y funciona como botón) */}
+      { }
       {props.estaSeleccionada && (
         <button 
           onClick={(e) => {
-            e.stopPropagation(); // Evita abrir los detalles de la carta
+            e.stopPropagation(); 
             props.onToggleSeleccion();
           }}
           className="absolute top-2 left-2 z-20 transition-transform active:scale-95 focus:outline-none"
@@ -45,7 +45,7 @@ const Carta: React.FC<ComponenteCartaProps> = (props) => {
           <div className="text-center"><p className="text-[9px] text-gray-500 font-bold">VIT</p><p className="font-black text-green-400">{props.lifepoint}</p></div>
         </div>
 
-        {/* BOTÓN COLOCADO EN LA PARTE INFERIOR DERECHA */}
+        { }
         <div className="mt-3 flex justify-end">
           <button
             onClick={(e) => {

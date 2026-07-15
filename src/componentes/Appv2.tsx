@@ -9,7 +9,7 @@ import ModalCartaDetalle from './ModalCartaDetalle';
 import ConfirmacionBorrado from './ConfirmacionBorrado';
 import DiseñoCartaIA from './DiseñoCartaIA';
 
-// IMPORTACIÓN DEL NUEVO COMPONENTE INTEGRADO
+// 
 import { PantallaBatalla } from './PantallaBatalla';
 
 const personajesIniciales: CartaProps[] = [
@@ -44,9 +44,9 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [idParaBorrar, setIdParaBorrar] = useState<number | null>(null);
 
-  // CONTROL DE ALINEACIÓN SELECCIONADA
+
   const [seleccionadas, setSeleccionadas] = useState<CartaProps[]>([]);
-  // Estado interno para activar visualmente el inicio del partido
+
   const [partidoIniciado, setPartidoIniciado] = useState(false);
 
   const handleToggleSeleccion = (carta: CartaProps) => {
@@ -54,7 +54,7 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
     if (existe) {
       setSeleccionadas(seleccionadas.filter((c) => c.id !== carta.id));
     } else {
-      // Límite reglamentario ajustado a 2 jugadores para el modo de juego actual 2vs2
+    
       if (seleccionadas.length >= 2) {
         alert("¡Tu dúo titular ya está completo! Deselecciona uno si quieres cambiar la estrategia del desafío.");
         return;
@@ -84,7 +84,6 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
     localStorage.setItem('cartas_haikyuu', JSON.stringify(cartas));
   }, [cartas]);
 
-  // Si el partido está iniciado en la vista desafío, renderizamos el campo completo ocupando toda la pantalla
   if (vista === 'desafio' && partidoIniciado && seleccionadas.length === 2) {
     return <PantallaBatalla cartas={seleccionadas} />;
   }
@@ -106,7 +105,7 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
       </nav>
 
       <main className="p-6 max-w-7xl mx-auto">
-        {/* INTERFACES DE CREACIÓN Y EDICIÓN TRADICIONAL */}
+        { }
         {vista === 'crear' && <FormularioCrearCarta onNuevaCarta={(n) => { setCartas([n, ...cartas]); navigate('/'); }} />}
         {vista === 'editar' && selectedCard && (
           <FormularioEditarCarta cartaActual={selectedCard} onCancelar={() => navigate('/')} onGuardar={(e) => {
@@ -115,14 +114,14 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
           }} />
         )}
         
-        {/* INTEGRACIÓN DEL NUEVO CREADOR CON INTELIGENCIA ARTIFICIAL */}
+        { }
         {vista === 'disenar-ia' && (
           <DiseñoCartaIA onCartaCreada={(nuevaCarta) => {
             setCartas([nuevaCarta, ...cartas]);
           }} />
         )}
 
-        {/* RENDERIZADO DEL MAZO PRINCIPAL */}
+        { }
         {(vista === 'inicio' || vista === 'detalle') && (
           <MazoDeCartas 
             cartas={cartas} 
@@ -134,7 +133,7 @@ function Appv2({vista, cartas, setCartas} : AppProps) {
           />
         )}
 
-        {/* VISTA DEL COMPONENTE DESAFÍO OPTIMIZADA CON FLUJO DE PANTALLA BATALLA */}
+        { }
         {vista === 'desafio' && !partidoIniciado && (
           <div className="p-8 bg-gray-900 border-2 border-orange-500 rounded-2xl shadow-2xl text-center max-w-3xl mx-auto">
             <h2 className="text-4xl font-black text-orange-500 uppercase italic mb-4">Modo Desafío: Preparar Escuadra</h2>

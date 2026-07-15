@@ -4,19 +4,19 @@ import type { CartaProps } from '../tipos/tiposCarta';
 const FormularioCrearCarta: React.FC<{ onNuevaCarta: (c: CartaProps) => void }> = ({ onNuevaCarta }) => {
   const [form, setForm] = useState({ name: '', description: '', attack: 0, defense: 0, lifepoint: 100, posicion: 'Atacante', pictureUrl: '' });
   
-  // NUEVO ESTADO: Guarda el texto del error si los campos están vacíos
+ 
   const [errorMensaje, setErrorMensaje] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // VALIDACIÓN INTEGRADA EN LA UI (Sin alerts molestos)
+   
     if (!form.name.trim() || !form.description.trim() || !form.pictureUrl.trim() || form.attack <= 0 || form.defense <= 0) {
       setErrorMensaje("¡Error! Debes rellenar todos los campos y asignar valores de combate superiores a 0 antes de enviar al jugador a la cancha.");
       return; 
     }
 
-    // Si pasa la validación, limpiamos cualquier error previo
+    
     setErrorMensaje(null);
 
     const nueva = { ...form, id: Date.now(), idCard: Date.now() };
@@ -59,7 +59,7 @@ const FormularioCrearCarta: React.FC<{ onNuevaCarta: (c: CartaProps) => void }> 
           Entrar a la Cancha
         </button>
 
-        {/* MENSAJE DE ERROR UBICADO EXACTAMENTE EN LA ZONA QUE SEÑALASTE */}
+        { }
         {errorMensaje && (
           <div className="md:col-span-2 mt-2 p-3 bg-red-950/80 border border-red-600 rounded-xl text-red-400 font-bold text-sm text-center animate-pulse shadow-md">
             {errorMensaje}

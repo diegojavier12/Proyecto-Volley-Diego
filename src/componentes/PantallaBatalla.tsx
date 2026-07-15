@@ -17,13 +17,12 @@ interface LogTurno {
 export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
   const navigate = useNavigate();
 
-  // --- ESTADOS DE JUGADORES (EQUIPO PROPIO Y ENEMIGO) ---
   const [j1_Arriba, setJ1Arriba] = useState<CartaProps | null>(null);
   const [j1_Abajo, setJ1Abajo] = useState<CartaProps | null>(null);
   const [j2_Arriba, setJ2Arriba] = useState<CartaProps | null>(null);
   const [j2_Abajo, setJ2Abajo] = useState<CartaProps | null>(null);
 
-  // --- ESTADOS DINÁMICOS DE COMBATE (VIDA, DEFENSA, FUERZA ACTUAL) ---
+
   const [stats, setStats] = useState({
     j1A_lp: 100, j1A_def: 100, j1A_atk: 100,
     j1B_lp: 100, j1B_def: 100, j1B_atk: 100,
@@ -31,24 +30,22 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
     j2B_lp: 100, j2B_def: 100, j2B_atk: 100,
   });
 
-  // --- CONTROL DE PARTIDO ---
+
   const [cargando, setCargando] = useState(true);
   const [esTurnoJugador, setEsTurnoJugador] = useState(true);
   const [jugadorAtacanteSeleccionado, setJugadorAtacanteSeleccionado] = useState<'A' | 'B'>('A');
   const [ganador, setGanador] = useState<string | null>(null);
   const [historialLogs, setHistorialLogs] = useState<LogTurno[]>([]);
   
-  // --- MODAL TIME OUT Y AGUA ---
+
   const [mostrarTimeOut, setMostrarTimeOut] = useState(false);
   const [aguaUsadaJugador, setAguaUsadaJugador] = useState(false);
 
-  // --- ASIGNACIÓN DE JUGADORES E IA ---
   useEffect(() => {
     if (cartas.length === 2) {
       const userCard1 = cartas[0];
       const userCard2 = cartas[1];
 
-      // Simulamos rivales estáticos o reutilizados para el desafío rápido basándonos en la alineación elegida
       const rival1 = userCard2;
       const rival2 = userCard1;
 
@@ -73,7 +70,7 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
     }
   }, [cartas]);
 
-  // --- DETECTAR FIN DEL JUEGO ---
+  
   useEffect(() => {
     if (!cargando) {
       const equipoJugadorMuerto = stats.j1A_lp <= 0 && stats.j1B_lp <= 0;
@@ -89,20 +86,20 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
     }
   }, [stats, cargando]);
 
-  // --- MECÁNICA: CÁLCULO DE PORCENTAJES EN RANGOS DE FUERZA/DEFENSA ---
+  
   const obtenerModificadorAtaque = (atkBase: number) => {
-    if (atkBase <= 130) return 1.10; // +10%
-    if (atkBase >= 141 && atkBase <= 170) return 1.20; // +20%
-    return 1.30; // 171 a más (+30%)
+    if (atkBase <= 130) return 1.02; // +2%
+    if (atkBase >= 141 && atkBase <= 170) return 1.05; // +5%
+    return 1.10; // 171 a más (+10%)
   };
 
   const obtenerModificadorDefensa = (defBase: number) => {
-    if (defBase <= 130) return 1.10; // +10%
-    if (defBase >= 141 && defBase <= 170) return 1.20; // +20%
-    return 1.30; // 171 a más (+30%)
+    if (defBase <= 130) return 1.02; // +2%
+    if (defBase >= 141 && defBase <= 170) return 1.05; // +5%
+    return 1.10; // 171 a más (+10%)
   };
 
-  // --- ACCIÓN: REHIDRATACIÓN CON AGUA ---
+ 
   const darAguaEquipo = () => {
     if (aguaUsadaJugador || ganador) return;
     
@@ -119,7 +116,7 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
     ]);
   };
 
-  // --- LÓGICA DE TURNOS (ATAQUE / SELECCIÓN DE OBJETIVO) ---
+ 
   const ejecutarRemate = (objetivo: 'A' | 'B') => {
     if (!esTurnoJugador || ganador) return;
 
@@ -137,7 +134,10 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
     const factorAtk = obtenerModificadorAtaque(atacanteKey.attack);
     const factorDef = obtenerModificadorDefensa(defBase);
     
-    let dañoRemate = Math.floor(atacanteAtkActual * factorAtk * (Math.random() * (1.2 - 0.9) + 0.9));
+    
+    let dañoRemate = Math.floor(
+      (atacanteAtkActual * factorAtk * (Math.random() * (1.2 - 0.9) + 0.9)) / 4
+    );
 
     let nuevoDefShield = defShield;
     let nuevoDefLp = defLp;
@@ -162,7 +162,7 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
 
     if (nuevoDefLp < defLp && defensorKey) {
       const ratioVida = nuevoDefLp / defensorKey.lifepoint;
-      nuevoDefAtk = Math.floor(defensorKey.attack * ratioVida);
+      nuevoDefAtk = Math.max(10, Math.floor(defensorKey.attack * ratioVida)); // Mínimo garantizado de 10 de daño
       logMsg += ` 📉 El cansancio físico agota a ${defensorKey.name}, su fuerza de ataque baja a ${nuevoDefAtk}.`;
     }
 
@@ -199,7 +199,10 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
 
     const factorAtk = obtenerModificadorAtaque(iaKey.attack);
     const factorDef = obtenerModificadorDefensa(jKey.defense);
-    let dañoIA = Math.floor(iaAtkActual * factorAtk * (Math.random() * (1.2 - 0.9) + 0.9));
+    
+    let dañoIA = Math.floor(
+      (iaAtkActual * factorAtk * (Math.random() * (1.2 - 0.9) + 0.9)) / 4
+    );
 
     let nuevoJLp = jLp;
     let nuevoJDef = jDef;
@@ -224,7 +227,7 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
 
     if (nuevoJLp < jLp) {
       const ratioVida = nuevoJLp / jKey.lifepoint;
-      nuevoJAtk = Math.floor(jKey.attack * ratioVida);
+      nuevoJAtk = Math.max(10, Math.floor(jKey.attack * ratioVida)); // Mínimo garantizado de 10 de daño
       logMsg += ` 📉 El cansancio ralentiza a ${jKey.name}, su ataque decrece a ${nuevoJAtk}.`;
     }
 
@@ -247,7 +250,7 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
   return (
     <div className="min-h-screen bg-neutral-800 text-white p-4 flex flex-col items-center justify-between font-sans relative overflow-x-hidden">
       
-      {/* HEADER CONTROLES */}
+      { }
       <div className="w-full max-w-5xl flex justify-between items-center bg-neutral-900/90 p-4 border-b-2 border-orange-500 rounded-xl shadow-lg z-10">
         <button 
           onClick={() => navigate('/')} 
@@ -264,16 +267,16 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
         </button>
       </div>
 
-      {/* CANCHA DE TRABAJO */}
-      <div className="w-full max-w-5xl bg-neutral-700 border-4 border-neutral-400 rounded-3xl my-4 p-4 md:p-8 shadow-2xl relative grid grid-cols-2 gap-4 items-center min-h-[500px]">
+      { }
+      <div className="w-full max-w-5xl bg-neutral-700 border-4 border-neutral-400 rounded-3xl my-4 p-4 md:p-8 shadow-2xl relative grid grid-cols-2 gap-4 items-center min-h-125">
         <div className="absolute inset-0 border-[6px] border-white/20 pointer-events-none m-4 rounded-xl"></div>
         
-        {/* RED CENTRAL */}
+        { }
         <div className="absolute top-0 bottom-0 left-1/2 w-2 pointer-events-none z-20 shadow-xl" style={{ backgroundImage: 'linear-gradient(to bottom, #fff 50%, #000 50%)', backgroundSize: '10px 25px', transform: 'translateX(-50%)' }}>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-neutral-900 border-2 border-orange-500 text-[10px] font-black px-2 py-0.5 rounded uppercase shadow">RED</div>
         </div>
 
-        {/* LADO IZQUIERDO: JUGADORES */}
+        { }
         <div className="flex flex-col gap-6 justify-center items-center z-10">
           <div className="text-center font-black text-xs uppercase tracking-widest text-orange-400 bg-neutral-900/60 px-3 py-1 rounded-full">Tu Escuadra</div>
           
@@ -314,7 +317,7 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
           )}
         </div>
 
-        {/* LADO DERECHO: RIVAL (IA) */}
+        { }
         <div className="flex flex-col gap-6 justify-center items-center z-10">
           <div className="text-center font-black text-xs uppercase tracking-widest text-red-400 bg-neutral-900/60 px-3 py-1 rounded-full">Rival (IA)</div>
           
@@ -356,7 +359,7 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
         </div>
       </div>
 
-      {/* SECCIÓN PANEL DE ACCIONES E HISTORIAL */}
+      { }
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
         <div className="bg-neutral-900 p-4 border border-neutral-700 rounded-2xl flex flex-col justify-center gap-3 shadow-lg">
           <div className="text-center font-bold text-xs uppercase text-neutral-400 tracking-wider">Acciones de Partido</div>
@@ -393,24 +396,24 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
         </div>
       </div>
 
-      {/* ANUNCIO LUMINOSO Y BRILLANTE DE FIN DEL JUEGO / VICTORIA */}
+      { }
       {ganador && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-[#111622] border-4 border-orange-500 rounded-3xl p-8 max-w-md w-full text-center relative shadow-[0_0_60px_rgba(249,115,22,0.45)] transform scale-100 transition-all border-double">
             
-            {/* Destello de fondo brillante */}
+            {}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-orange-600/20 rounded-full blur-3xl pointer-events-none -z-10 animate-pulse"></div>
 
-            {/* Balón luminoso animado */}
+            { }
             <div className="flex justify-center mb-6">
-              <div className="p-4 bg-gradient-to-t from-orange-600 to-amber-400 rounded-full shadow-[0_0_30px_rgba(245,158,11,0.6)] animate-bounce">
+              <div className="p-4 bg-linear-to-t from-orange-600 to-amber-400 rounded-full shadow-[0_0_30px_rgba(245,158,11,0.6)] animate-bounce">
                 <span className="text-4xl">🏐</span>
               </div>
             </div>
 
-            {/* Letrero estilo Arcade / Campeonato */}
+            { }
             <div className="mb-4">
-              <h2 className="text-5xl font-black italic tracking-tighter uppercase text-white bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 border-y-4 border-black inline-block px-8 py-3 rounded-2xl transform -rotate-1 shadow-[0_5px_0_#000] border-inline">
+              <h2 className="text-5xl font-black italic tracking-tighter uppercase text-white bg-linear-to-r from-red-600 via-orange-500 to-yellow-400 border-y-4 border-black inline-block px-8 py-3 rounded-2xl transform -rotate-1 shadow-[0_5px_0_#000] border-inline">
                 {ganador.includes("Victoria") ? "VICTORY" : "MATCH OVER"}
               </h2>
             </div>
@@ -419,15 +422,11 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
               {ganador}
             </p>
 
-            <div className="text-xs text-orange-400 font-bold uppercase tracking-widest mb-6 animate-pulse">
-              ✨ ¡El balón nunca cayó de tu lado! ✨
-            </div>
-
-            {/* Botones de acción */}
+            { }
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white font-black py-4 rounded-xl uppercase tracking-widest text-xs border-b-4 border-green-800 active:border-b-0 transition-all shadow-lg shadow-emerald-950/50"
+                className="w-full bg-linear-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white font-black py-4 rounded-xl uppercase tracking-widest text-xs border-b-4 border-green-800 active:border-b-0 transition-all shadow-lg shadow-emerald-950/50"
               >
                 🔥 Volver a Jugar
               </button>
@@ -443,7 +442,6 @@ export const PantallaBatalla: React.FC<BatallaProps> = ({ cartas }) => {
         </div>
       )}
 
-      {}
       {mostrarTimeOut && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-neutral-900 border-2 border-orange-500 p-6 rounded-3xl max-w-sm w-full text-center shadow-2xl">

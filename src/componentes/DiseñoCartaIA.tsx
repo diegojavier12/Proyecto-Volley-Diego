@@ -30,7 +30,7 @@ const DiseñarCartaIA: React.FC<DiseñarCartaIAProps> = ({ onCartaCreada }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'usersecretpasskey': 'Dieg804808RO', // Tu llave secreta exacta
+          'usersecretpasskey': 'Dieg804808RO', 
         },
         body: JSON.stringify({
           globalContext: globalContext,
@@ -47,14 +47,14 @@ const DiseñarCartaIA: React.FC<DiseñarCartaIAProps> = ({ onCartaCreada }) => {
 
       const data = await response.json();
 
-      // Normalizamos y validamos la posición que devuelva la IA para que coincida con tus tipos
+     
       let posicionMapeada: 'Atacante' | 'Armador' | 'Libero' | 'Bloqueador' | 'Universal' = 'Atacante';
       const posAI = data.attributes?.element || '';
       if (['Atacante', 'Armador', 'Libero', 'Bloqueador', 'Universal'].includes(posAI)) {
         posicionMapeada = posAI as 'Atacante' | 'Armador' | 'Libero' | 'Bloqueador' | 'Universal';
       }
 
-      // Mapeo preciso respetando rigurosamente tu interfaz de tiposCarta.tsx
+    
       const nuevaCarta: CartaProps = {
         id: data.idCard || Date.now(),
         idCard: data.idCard,
@@ -62,10 +62,10 @@ const DiseñarCartaIA: React.FC<DiseñarCartaIAProps> = ({ onCartaCreada }) => {
         description: data.description || 'Sin descripción disponible.',
         attack: Number(data.attack) || 100,
         defense: Number(data.defense) || 100,
-        lifepoint: data.lifePoints || 100, // Propiedad 'lifepoint' corregida
+        lifepoint: data.lifePoints || 100, 
         pictureUrl: data.pictureUrl || 'https://via.placeholder.com/150',
         posicion: posicionMapeada,
-        numero: Math.floor(Math.random() * 12) + 1 // Asigna un número de camiseta automático
+        numero: Math.floor(Math.random() * 12) + 1
       };
 
       setCartaGenerada(nuevaCarta);
@@ -92,7 +92,7 @@ const DiseñarCartaIA: React.FC<DiseñarCartaIAProps> = ({ onCartaCreada }) => {
 
       <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-12 w-full max-w-5xl">
         
-        {/* Formulario Prompt */}
+        { }
         <div className="w-full max-w-lg bg-[#161d26] border-2 border-neutral-800 rounded-2xl p-6 shadow-2xl">
           <form onSubmit={manejarGeneracion} className="space-y-6">
             <div>
@@ -129,8 +129,8 @@ const DiseñarCartaIA: React.FC<DiseñarCartaIAProps> = ({ onCartaCreada }) => {
           </form>
         </div>
 
-        {/* Panel de visualización de la carta generada */}
-        <div className="w-full max-w-sm min-h-[400px] flex flex-col items-center justify-center">
+        { }
+        <div className="w-full max-w-sm min-h-100 flex flex-col items-center justify-center">
           {loading && (
             <div className="flex flex-col items-center justify-center text-center space-y-4">
               <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
@@ -154,7 +154,7 @@ const DiseñarCartaIA: React.FC<DiseñarCartaIAProps> = ({ onCartaCreada }) => {
                 ¡Invocación Exitosa!
               </p>
               
-              {/* Esparcimos las propiedades individuales de la carta para que encajen con ComponenteCarta */}
+              { }
               <ComponenteCarta
                 estaSeleccionada={false}
                 {...cartaGenerada}
